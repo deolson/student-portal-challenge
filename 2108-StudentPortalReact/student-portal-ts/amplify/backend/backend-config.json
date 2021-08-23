@@ -1,0 +1,16 @@
+{
+  "auth": {
+    "studentportaltsb45d8562": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  },
+  "storage": {
+    "walmartdemots": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
+  }
+}
