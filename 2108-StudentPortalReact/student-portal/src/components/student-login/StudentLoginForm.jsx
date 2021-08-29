@@ -81,7 +81,8 @@ const SignInForm = () => {
   const handleFormSubmit = (event) => {
     event.preventDefault()
     console.log(formData)
-    dispatch(studentLogin(formData.userEmail, formData.password))
+    const bool = dispatch(studentLogin(formData.userEmail, formData.password))
+    console.log(bool);
     setsubmitError(true)
   }
 

@@ -1,7 +1,8 @@
 import React, { ReactElement } from 'react'
-import { makeStyles, TextField, Grid } from '@material-ui/core'
+import { makeStyles, TextField, Grid, IconButton, Button } from '@material-ui/core'
 import { RootState } from '../../../../redux/store'
 import { useAppSelector } from '../../../../redux/hooks'
+import { Send } from '@material-ui/icons'
 
 const useStyle = makeStyles((theme) => ({
   root: {}
@@ -24,6 +25,10 @@ export default function EditStudentDetailsForm (): ReactElement {
     })
   }
 
+  function handleSubmit (event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+  }
+
   return (
     <form className={classes.root}>
       <Grid
@@ -31,10 +36,11 @@ export default function EditStudentDetailsForm (): ReactElement {
         justifyContent='space-evenly'
         alignItems='center'
       >
-        <Grid item xs={5}>
+        <Grid item xs={6}>
           <TextField
             variant='outlined'
             fullWidth
+            size='small'
             type='text'
             label='First Name'
             id='firstName'
@@ -42,10 +48,11 @@ export default function EditStudentDetailsForm (): ReactElement {
             onChange={handleChange}
           />
         </Grid>
-        <Grid item xs={5}>
+        <Grid item xs={6}>
           <TextField
             variant='outlined'
             fullWidth
+            size='small'
             label='Last Name'
             value={(student != null) ? student.firstName : ''}
             onChange={handleChange}

@@ -11,7 +11,6 @@ interface Props {
 }
 
 export const UploadPhotoButton = (props: Props) => {
-
   const dispatch = useAppDispatch()
 
   async function handlePicInput (event: React.ChangeEvent<HTMLInputElement>) {
@@ -19,7 +18,7 @@ export const UploadPhotoButton = (props: Props) => {
       const file = event.target.files[0]
       const fileName = props.student.collegeEmail + '' + file.name
       const result: any = await Storage.put(fileName, file)
-      let student = props.student
+      const student = props.student
       student.profilePic = result.key
       dispatch(editStudentInfo(student))
     }
