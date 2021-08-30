@@ -36,6 +36,13 @@ public class UserServiceImpl implements UserService {
 		this.addressDao = addressDao;
 	}
 
+	/**
+	 *@param Takes in a Data Transfer Object in the form of a partial user, 
+	 * which allows us to update the section of information that we deem mutable
+	 *
+	 *@return Updated user
+	 *
+	 */
 	@Override
 	public User save(User partialUser) {
 		User user = userDao.findByCollegeEmail(partialUser.getCollegeEmail());
@@ -93,11 +100,24 @@ public class UserServiceImpl implements UserService {
 		return userDao.existsByCollegeEmail(email);
 	}
 
+	
 	@Override
 	public Boolean existsByRecoveryEmail(String email) {
 		return userDao.existsByRecoveryEmail(email);
 	}
 
+	/**
+	 * Method to fetch all users in the database with the student role
+	 * 
+	 *@return A set of all users with the role student
+	 */
+	@Override
+	public Set<User> findAllStudents() {
+		Set<Role> studentSet = new HashSet<Role>();
+		studentSet.add(roleService.findByRoleName(ERole.ROLE_STUDENT));
+		return userDao.findByRolesIn(studentSet);
+	}
+	
 	@PostConstruct
 	public void addFirstUser() {
 		roleService.save(new Role(ERole.ROLE_STUDENT));
@@ -107,13 +127,6 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(bcryptEncoder.encode("pass"));
 		user.getRoles().add(roleService.findByRoleName(ERole.ROLE_ADMIN));
 		userDao.save(user);
-	}
-
-	@Override
-	public Set<User> findAllStudents() {
-		Set<Role> studentSet = new HashSet<Role>();
-		studentSet.add(roleService.findByRoleName(ERole.ROLE_STUDENT));
-		return userDao.findByRolesIn(studentSet);
 	}
 
 }

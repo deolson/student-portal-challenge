@@ -25,14 +25,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		this.userDao = userDao;
 	}
 	
+    /**
+     * Method called by the auth manager to verify a user exists. This information is later
+     *  compared against an incoming request. 
+     *  
+     */
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String collegeEmail) throws UsernameNotFoundException {
-    	System.out.println("loading");
     	User user = userDao.findByCollegeEmail(collegeEmail);
-    	System.out.println("service user"+user);
         if(user == null){
-            throw new UsernameNotFoundException("Invalid username or password.");
+            throw new UsernameNotFoundException("Invalid username.");
         }
     	return new org.springframework.security.core.userdetails.User(user.getCollegeEmail(), user.getPassword(), getAuthority(user));
     }

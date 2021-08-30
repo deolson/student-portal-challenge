@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"studentportal"},{"l":"studentportal.controller"},{"l":"studentportal.dao"},{"l":"studentportal.model"},{"l":"studentportal.security"},{"l":"studentportal.service"}];updateSearchResults();

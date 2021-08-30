@@ -1,0 +1,6 @@
+studentportal
+studentportal.controller
+studentportal.dao
+studentportal.model
+studentportal.security
+studentportal.service

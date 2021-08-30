@@ -18,6 +18,12 @@ import studentportal.model.User;
 import studentportal.security.TokenProvider;
 import studentportal.service.UserService;
 
+/**
+ * @author David Olson
+ * 
+ * 
+ *
+ */
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/auth")
@@ -28,24 +34,32 @@ public class AuthController {
 	private UserService userService;
 
 	@Autowired
-	public AuthController(TokenProvider jwtTokenUtil, AuthenticationManager authenticationManager, UserService userService) {
+	public AuthController(TokenProvider jwtTokenUtil, AuthenticationManager authenticationManager,
+			UserService userService) {
 		this.jwtTokenUtil = jwtTokenUtil;
 		this.authenticationManager = authenticationManager;
 		this.userService = userService;
 	}
-	
+
+	/**
+	 * 
+	 * API end point to authenticate users.
+	 * 
+	 * @param jwtRequest containing a college email issued by the university used as
+	 *                   a user name and password to validate. Defined in the models
+	 *                   package.
+	 * 
+	 * @return JwtResponse consisting of a generated token Defined in the models
+	 *         package.
+	 */
 	@PostMapping("/signin")
 	public JwtResponse authenticateUser(@RequestBody JwtRequest jwtRequest) {
 		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(
-						jwtRequest.getCollegeEmail(), 
-						jwtRequest.getPassword()
-				)
-		);
+				new UsernamePasswordAuthenticationToken(jwtRequest.getCollegeEmail(), jwtRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		final String token = jwtTokenUtil.generateToken(authentication);
 		User user = userService.findByCollegeEmail(jwtRequest.getCollegeEmail());
-		return new JwtResponse(token,user);
+		return new JwtResponse(token, user);
 	}
-	
+
 }

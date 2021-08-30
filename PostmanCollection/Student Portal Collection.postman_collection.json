@@ -1,0 +1,131 @@
+{
+	"info": {
+		"_postman_id": "c029365f-8679-4077-b0fe-d33a545342fa",
+		"name": "Student Portal Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login Admin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"collegeEmail\": \"default@admin.edu\",\r\n    \"password\": \"pass\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9010/auth/signin",
+					"host": [
+						"localhost"
+					],
+					"port": "9010",
+					"path": [
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Student",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZWZhdWx0QGFkbWluLmVkdSIsInJvbGVzIjoiUk9MRV9BRE1JTixST0xFX1NUVURFTlQiLCJpYXQiOjE2MzAyNjI2NzUsImV4cCI6MTYzMDI4MDY3NX0.SzQJQijSYyyzCs2iV2a6LUz3UjLBfVmpUuJnFmikDAc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"recoveryEmail\" : \"david.earl.olson@gmail.com\",\r\n    \"firstName\" : \"David\",\r\n    \"lastName\" : \"Olson\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9010/student/register",
+					"host": [
+						"localhost"
+					],
+					"port": "9010",
+					"path": [
+						"student",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Student",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Students",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Student",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZWZhdWx0QGFkbWluLmVkdSIsInJvbGVzIjoiUk9MRV9BRE1JTixST0xFX1NUVURFTlQiLCJpYXQiOjE2MzAyNjI2NzUsImV4cCI6MTYzMDI4MDY3NX0.SzQJQijSYyyzCs2iV2a6LUz3UjLBfVmpUuJnFmikDAc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"userId\": 2,\r\n        \"collegeEmail\": \"david.olson@college.edu\",\r\n        \"recoveryEmail\": \"david.earl.olson@gmail.com\",\r\n        \"firstName\": \"David\",\r\n        \"lastName\": \"Olson\",\r\n        \"dateOfBirth\": \"2017-01-14\",\r\n        \"profilePic\": \"angry dog.jpg\",\r\n        \"address\": {\r\n            \"placeId\": \"placeIDTemp\"\r\n        }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9010/student/update",
+					"host": [
+						"localhost"
+					],
+					"port": "9010",
+					"path": [
+						"student",
+						"update"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
