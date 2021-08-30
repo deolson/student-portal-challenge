@@ -1,26 +1,24 @@
 import { IconButton, Input } from '@material-ui/core'
 import { AddAPhoto } from '@material-ui/icons'
 import React from 'react'
-import { IStudent } from '../../../state-structures'
+import { IUser } from '../../../state-structures'
 import { Storage } from 'aws-amplify'
-import { useAppDispatch } from '../../../redux/hooks'
-import { editStudentInfo } from '../../../redux/thunks'
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
+import { editInfo } from '../../../redux/thunks'
+import { RootState } from '../../../redux/store'
 
-interface Props {
-  student: IStudent
-}
-
-export const UploadPhotoButton = (props: Props) => {
+export const UploadPhotoButton = () => {
   const dispatch = useAppDispatch()
+  const jwt = useAppSelector((state: RootState) => state.auth.jwtToken)
+  const user = useAppSelector((state: RootState) => state.auth.user)
 
   async function handlePicInput (event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files != null) {
       const file = event.target.files[0]
-      const fileName = props.student.collegeEmail + '' + file.name
+      const fileName = user.collegeEmail + '' + file.name
       const result: any = await Storage.put(fileName, file)
-      const student = props.student
-      student.profilePic = result.key
-      dispatch(editStudentInfo(student))
+      user.profilePic = result.key
+      dispatch(editInfo(user, jwt))
     }
   }
 

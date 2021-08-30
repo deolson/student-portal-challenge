@@ -4,13 +4,19 @@ import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles(() => ({
   buttonContainer: {
-    marginTop: '30px',
+    marginTop: '10px',
 
     '& Button': {
       margin: '15px',
       width: '80%',
       height: '70px'
     }
+  },
+  link: {
+    width: '100%',
+    color: 'inherit',
+    textDecoration: 'inherit',
+    textAlign: 'center'
   }
 }))
 
@@ -22,7 +28,7 @@ export default function PortalButtonContainer () {
         <Grid container justifyContent='center' item xs={6}>
           <Link
             to='/student'
-            style={{ width: '100%', color: 'inherit', textDecoration: 'inherit' }}
+            className={classes.link}
           >
             <Button
               variant='contained'
@@ -42,7 +48,7 @@ export default function PortalButtonContainer () {
             Parent Login
           </Button>
         </Grid>
-        <Grid item xs={6}>
+        <Grid container justifyContent='center' item xs={6}>
           <Button
             variant='contained'
             color='primary'
@@ -51,7 +57,7 @@ export default function PortalButtonContainer () {
             Admin Login
           </Button>
         </Grid>
-        <Grid item xs={6}>
+        <Grid container justifyContent='center' item xs={6}>
           <Button
             variant='contained'
             color='primary'

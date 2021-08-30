@@ -1,20 +1,30 @@
-import React, { ReactElement } from 'react'
+import React, { Dispatch, ReactElement, SetStateAction, useEffect } from 'react'
 import { makeStyles, TextField, Grid, IconButton, Button } from '@material-ui/core'
 import { RootState } from '../../../../redux/store'
-import { useAppSelector } from '../../../../redux/hooks'
-import { Send } from '@material-ui/icons'
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks'
+import { editInfo } from '../../../../redux/thunks'
+import { IUser } from '../../../../state-structures'
 
 const useStyle = makeStyles((theme) => ({
   root: {}
 }))
 
-const initialFormData = {
-  firstName: '',
-  lastName: ''
+interface IProps {
+  setEditName: Dispatch<SetStateAction<boolean>>
 }
 
-export default function EditStudentDetailsForm (): ReactElement {
-  const student = useAppSelector((state: RootState) => state.auth.student)
+export default function EditStudentDetailsForm (props: IProps): ReactElement {
+  const dispatch = useAppDispatch()
+  const user = useAppSelector((state: RootState) => state.auth.user)
+  const jwt = useAppSelector((state: RootState) => state.auth.jwtToken)
+  const firstName = useAppSelector((state: RootState) => state.auth.user.firstName)
+  const lastName = useAppSelector((state: RootState) => state.auth.user.lastName)
+
+  const initialFormData = {
+    firstName: firstName,
+    lastName: lastName
+  }
+
   const [formData, updateFormData] = React.useState(initialFormData)
   const classes = useStyle()
 
@@ -27,10 +37,23 @@ export default function EditStudentDetailsForm (): ReactElement {
 
   function handleSubmit (event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    props.setEditName(false)
+    let submitUser: IUser = {
+      userId: user.userId,
+      collegeEmail: user.collegeEmail,
+      recoveryEmail: user.recoveryEmail,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      dateOfBirth: user.dateOfBirth,
+      address: user.address,
+      profilePic: user.profilePic,
+      roles: user.roles
+    }
+    dispatch(editInfo(submitUser, jwt))
   }
 
   return (
-    <form className={classes.root}>
+    <form className={classes.root} onSubmit={handleSubmit}>
       <Grid
         container
         justifyContent='space-evenly'
@@ -54,10 +77,12 @@ export default function EditStudentDetailsForm (): ReactElement {
             fullWidth
             size='small'
             label='Last Name'
-            value={(student != null) ? student.firstName : ''}
+            id='lastName'
+            value={formData.lastName}
             onChange={handleChange}
           />
         </Grid>
+          <Button type='submit' style={{display:"none"}} />
       </Grid>
     </form>
   )

@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +19,7 @@ import studentportal.model.Address;
 import studentportal.model.ERole;
 import studentportal.model.Role;
 import studentportal.model.User;
+import studentportal.util.SendingEmail;
 
 @Service
 @NoArgsConstructor
@@ -64,8 +66,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User registerStudent(User user) {
-		user.setPassword(bcryptEncoder.encode("pass"));
+	public User registerStudent(User user) throws MessagingException {
+		String pass = User.generateRandomSpecialCharacters();
+		user.setPassword(bcryptEncoder.encode(pass));
 		user.getRoles().add(roleService.findByRoleName(ERole.ROLE_STUDENT));
 
 		String firstName = user.getFirstName();
@@ -77,6 +80,7 @@ public class UserServiceImpl implements UserService {
 			user.setCollegeEmail(firstName + "." + lastName + "x" + count + "@college.edu");
 			count++;
 		}
+		SendingEmail.sendMail(user.getRecoveryEmail(), user.getCollegeEmail() , pass );
 		return userDao.save(user);
 	}
 
@@ -106,11 +110,6 @@ public class UserServiceImpl implements UserService {
 		return userDao.existsByRecoveryEmail(email);
 	}
 
-	/**
-	 * Method to fetch all users in the database with the student role
-	 * 
-	 *@return A set of all users with the role student
-	 */
 	@Override
 	public Set<User> findAllStudents() {
 		Set<Role> studentSet = new HashSet<Role>();

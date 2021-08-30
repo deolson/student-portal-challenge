@@ -23,8 +23,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class TokenProvider implements Serializable {
-	
-    @Value("${jwt.token.validity}")
+
+	@Value("${jwt.token.validity}")
     private long TOKEN_VALIDITY;
 
     @Value("${jwt.signing.key}")
@@ -66,13 +66,25 @@ public class TokenProvider implements Serializable {
     			.compact();
     }
 	
+    /**
+     * Simple method to pull user name from the token subject
+     * 
+     * @param token to pull information from
+     * @return the user name / college email 
+     */
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
     
+    
+    /**
+     * @param token to pull information from
+     * @return JWT expiration date
+     */
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
+    
     
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = getAllClaimsFromToken(token);
@@ -116,8 +128,7 @@ public class TokenProvider implements Serializable {
      * to construct this auth object we need to provide a UsernamePasswordAuthToken.
      * 
      * @param token that we parse for a user's given roles
-     * @param existingAuth -
-     * @param userDetails
+     * @param userDetails containing the information about our user
      * @return An Authentication token containing our user details as well as a collection of roles
      */
     UsernamePasswordAuthenticationToken getAuthenticationToken(String token, Authentication existingAuth, UserDetails userDetails) {

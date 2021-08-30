@@ -1,7 +1,6 @@
 package studentportal.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +20,7 @@ import studentportal.service.UserService;
 /**
  * @author David Olson
  * 
- * 
+ * Authentication controller to handle user validation. 
  *
  */
 @CrossOrigin(origins = "*")
@@ -46,16 +45,19 @@ public class AuthController {
 	 * API end point to authenticate users.
 	 * 
 	 * @param jwtRequest containing a college email issued by the university used as
-	 *                   a user name and password to validate. Defined in the models
-	 *                   package.
+	 *                   a user name and password to validate.
 	 * 
-	 * @return JwtResponse consisting of a generated token Defined in the models
+	 * @return JwtResponse consisting of a generated token defined in the models
 	 *         package.
 	 */
 	@PostMapping("/signin")
 	public JwtResponse authenticateUser(@RequestBody JwtRequest jwtRequest) {
+		
+		//Authentication Manager authenticate is configured in the web security config
 		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(jwtRequest.getCollegeEmail(), jwtRequest.getPassword()));
+				new UsernamePasswordAuthenticationToken(
+						jwtRequest.getCollegeEmail(), jwtRequest.getPassword()));
+		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		final String token = jwtTokenUtil.generateToken(authentication);
 		User user = userService.findByCollegeEmail(jwtRequest.getCollegeEmail());

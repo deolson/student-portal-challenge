@@ -2,6 +2,7 @@ package studentportal.controller;
 
 import java.util.Set;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +35,7 @@ public class StudentController {
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping("/register")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody User signUpUser) {
+	public ResponseEntity<?> registerStudent(@Valid @RequestBody User signUpUser) {
 		if(userService.existsByRecoveryEmail(signUpUser.getRecoveryEmail())) {
 			return ResponseEntity.badRequest().body("Error: Email is already in use!");
 		}
@@ -44,7 +44,12 @@ public class StudentController {
 				signUpUser.getFirstName(), 
 				signUpUser.getLastName());
 		
-		userService.registerStudent(newStudent);
+		try {
+			userService.registerStudent(newStudent);
+		} catch (MessagingException e) {
+			return ResponseEntity.internalServerError().body("Error: Not able to send email to new student");
+		}
+		
 		return ResponseEntity.ok("User registered successfully!");
 	}
 	
@@ -59,7 +64,6 @@ public class StudentController {
 	
 	@PutMapping("/update")
 	public  ResponseEntity<?> updateStudentInfo(@RequestBody User user) {
-		System.out.println("Updating user: "+user);
 		
 		if(!userService.existsByCollegeEmail(user.getCollegeEmail())) {
 			return ResponseEntity.badRequest().body("Error: No Student Entity Associated With "+user.getCollegeEmail());

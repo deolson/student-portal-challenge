@@ -3,12 +3,14 @@ package studentportal.service;
 import java.util.List;
 import java.util.Set;
 
+import javax.mail.MessagingException;
+
 import studentportal.model.User;
 
 public interface UserService {
 
 	//Create
-	public User registerStudent(User user);
+	public User registerStudent(User user) throws MessagingException;
 	
 	//Read 
 	public List<User> findAll();

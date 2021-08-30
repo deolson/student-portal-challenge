@@ -2,22 +2,26 @@ import { AuthActionTypes } from './action-types'
 import { AppDispatch, AppThunk } from './store'
 import {
   loginFailure,
-  studentLoginRequest,
-  studentLoginSuccess,
-  updateStudent
+  loginRequest,
+  loginSuccess,
+  updateUser
 } from './action-creators'
 import axios from 'axios'
-import { IStudent } from '../state-structures'
+import { IUser } from '../state-structures'
 
-const url = 'http://localhost:9005'
+const url = 'http://3.128.199.247:9010'
+// const url = 'localhost:9010'
 
 export const studentLogin =
     (collegeEmail: string, password: string): AppThunk =>
       async (dispatch: AppDispatch) => {
-        dispatch(studentLoginRequest())
+        dispatch(loginRequest())
         await axios
-          .post(url + '/auth/student', { collegeEmail, password })
-          .then((response) => dispatch(studentLoginSuccess(response.data)))
+          .post(url + '/auth/signin', { collegeEmail, password })
+          .then((response) => {
+            console.log(response);
+            dispatch(loginSuccess(response.data))
+          })
           .catch(() => dispatch(loginFailure()))
       }
 
@@ -25,21 +29,33 @@ export const logoutStudent = () => async (dispatch: AppDispatch) => {
   dispatch({ type: AuthActionTypes.LOGOUT })
 }
 
-export const editStudentInfo =
-    (student: IStudent): AppThunk =>
+
+//Edit User info thunk
+//If a response is given with an ok status code we go ahead and dispatch an update action based on the updated user info
+//No other actions or thunks are dispatched by this function
+export const editInfo =
+    (user: IUser, jwt: string): AppThunk =>
       async (dispatch: AppDispatch) => {
-        console.log(JSON.stringify(student))
         await axios
           .put(url + '/student/update', {
-            studentId: student.studentId,
-            collegeEmail: student.collegeEmail,
-            recoveryEmail: student.recoveryEmail,
-            firstName: student.firstName,
-            lastName: student.lastName,
-            dateOfBirth: student.dateOfBirth,
-            address: student.address,
-            profilePic: student.profilePic
+            studentId: user.userId,
+            collegeEmail: user.collegeEmail,
+            recoveryEmail: user.recoveryEmail,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            dateOfBirth: user.dateOfBirth,
+            address: user.address,
+            profilePic: user.profilePic
+          },
+          {
+            headers: {
+              authorization: 'Bearer ' + jwt
+            }
           })
-          .then((response) => dispatch(updateStudent(response.data)))
-          .catch()
+          .then((response) => {
+              if(response.status === 200) {
+                dispatch(updateUser(user))
+              }
+          })
+          .catch(() => {})
       }

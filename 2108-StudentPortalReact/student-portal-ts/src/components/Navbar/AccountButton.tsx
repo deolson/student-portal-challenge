@@ -34,7 +34,7 @@ export default function AccountButton () {
   }
 
   const [url, setProfileUrl] = useState('')
-  const student = useSelector((state: RootState) => state.auth.student)
+  const user = useSelector((state: RootState) => state.auth.user)
 
   // useEffect(() => {
   //     if (student.profilePic) {

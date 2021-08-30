@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Simple Address model that tries to mirror Google Geolocation API
+ * Simple Address model that tries to mirror Google Places API
  *
  */
 @Getter

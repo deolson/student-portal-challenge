@@ -1,13 +1,12 @@
 import { AuthActionTypes } from './action-types'
 import { AnyAction } from 'redux'
-import { IStudent, IAdmin } from '../state-structures'
+import { IUser } from '../state-structures'
 
 const authInitialState = {
   jwtToken: '',
   loggedIn: false,
   isLoggingIn: false,
-  student: null as IStudent | null,
-  admin: null as IAdmin | null
+  user: {} as IUser
 }
 
 export const authReducer = (
@@ -20,17 +19,11 @@ export const authReducer = (
         ...state,
         isLoggingIn: true
       }
-    case AuthActionTypes.LOGIN_STUDENT_SUCCESS:
+    case AuthActionTypes.LOGIN_SUCCESS:
       return {
         ...state,
-        student: action.payload,
-        loggedIn: true,
-        isLoggingIn: false
-      }
-    case AuthActionTypes.LOGIN_ADMIN_SUCCESS:
-      return {
-        ...state,
-        admin: action.payload,
+        user: action.payload,
+        jwtToken: action.jwt,
         loggedIn: true,
         isLoggingIn: false
       }
@@ -40,13 +33,12 @@ export const authReducer = (
         jwtToken: '',
         loggedIn: false,
         isLoggingIn: false,
-        student: null,
-        admin: null
+        user: {} as IUser
       }
-    case AuthActionTypes.STUDENT_UPDATE:
+    case AuthActionTypes.USER_UPDATE:
       return {
         ...state,
-        student: action.payload
+        user: action.payload
       }
     default:
       return state

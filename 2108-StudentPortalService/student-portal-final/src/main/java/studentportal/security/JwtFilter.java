@@ -70,6 +70,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
+        //Our application doesn't have a next filter so this will invoke the next resource
         filterChain.doFilter(request, response);
 		
 	}

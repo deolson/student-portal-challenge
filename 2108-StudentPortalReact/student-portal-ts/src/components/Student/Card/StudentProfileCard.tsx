@@ -17,6 +17,9 @@ import { UploadPhotoButton } from './UploadPhotoButton'
 import { useAppSelector } from '../../../redux/hooks'
 import { RootState } from '../../../redux/store'
 import EditStudentNameForm from '../Form/Edit/EditStudentNameForm'
+import { formatDate, toLocalDate } from '../../../util/date'
+import EditStudentBirthday from '../Form/Edit/EditStudentBirthday'
+import EditStudentAddress from '../Form/Edit/EditStudentAddress'
 
 const useStyle = makeStyles(() => ({
   root: {
@@ -28,25 +31,48 @@ const useStyle = makeStyles(() => ({
     height: 150,
     margin: 10
   },
-  aqua: {
-    color: 'aqua'
+  space: {
+    margin: 10
   }
 }))
 
 export default function StudentProfileCard (): ReactElement {
   const classes = useStyle()
-  const student = useAppSelector((state: RootState) => state.auth.student!)
-  const [profileUrl, setProfileUrl] = useState(student.profilePic)
+  const profilePic = useAppSelector((state: RootState) => state.auth.user.profilePic)
+  const address = useAppSelector((state: RootState) => state.auth.user.address)
+  const firstName = useAppSelector((state: RootState) => state.auth.user.firstName)
+  const lastName = useAppSelector((state: RootState) => state.auth.user.lastName)
+  const dateOfBirth = useAppSelector((state: RootState) => state.auth.user.dateOfBirth)
+  const [profileUrl, setProfileUrl] = useState(profilePic)
   const [editName, setEditName] = useState(false)
-  const address = student.address
+  const [editBirthday, setEditBirthday] = useState(false)
+  const [editAddress, setEditAddress] = useState(false)
 
   useEffect(() => {
-    if (student.profilePic) {
-      getProfilePic(student.profilePic).then((picURL) =>
+    if (profilePic) {
+      getProfilePic(profilePic).then((picURL) =>
         setProfileUrl(picURL)
       )
     }
-  }, [student.profilePic])
+  }, [profilePic])
+
+  function handleEditNameClick () {
+    setEditAddress(false)
+    setEditBirthday(false)
+    setEditName(!editName)
+  }
+
+  function handleEditBirthdayClick () {
+    setEditAddress(false)
+    setEditName(false)
+    setEditBirthday(!editBirthday)
+  }
+
+  function handleEditAddressClick () {
+    setEditName(false)
+    setEditBirthday(false)
+    setEditAddress(!editAddress)
+  }
 
   return (
     <Card className={classes.root}>
@@ -60,7 +86,7 @@ export default function StudentProfileCard (): ReactElement {
                 horizontal: 'right'
               }}
               badgeContent={
-                <UploadPhotoButton student={student} />
+                <UploadPhotoButton />
               }
             >
               <Avatar
@@ -73,13 +99,13 @@ export default function StudentProfileCard (): ReactElement {
             <Typography
               variant='h5'
               align='center'
-              gutterBottom
-              className={classes.aqua}
+              className={classes.space}
+              color='primary'
             >
-              {student.firstName + ' ' + student.lastName}
+              {firstName + ' ' + lastName}
             </Typography>
-            <EditStudentNameForm />
           </Grid>
+          {editName && <EditStudentNameForm setEditName={setEditName} />}
           <Grid
             item
             container
@@ -87,13 +113,14 @@ export default function StudentProfileCard (): ReactElement {
             justifyContent='center'
             alignItems='center'
           >
-            <LocationOn className={classes.aqua} />
-            <Typography variant='body2' display='inline'>
+            <Typography variant='body1' display='inline' className={classes.space}>
+            <LocationOn color='primary' />
               {address != null
-                ? address.toString()
+                ? address.placeId
                 : 'No Address Information'}
             </Typography>
           </Grid>
+          {editAddress && <EditStudentAddress setEditAddress={setEditAddress} />}
           <Grid
             item
             container
@@ -101,19 +128,20 @@ export default function StudentProfileCard (): ReactElement {
             justifyContent='center'
             alignItems='center'
           >
-            <Cake className={classes.aqua} />
-            <Typography variant='body2' display='inline'>
-              {student.dateOfBirth != null
-                ? student.dateOfBirth
+            <Typography variant='body1' display='inline' className={classes.space}>
+              <Cake color='primary' />
+              {dateOfBirth != null
+                ? formatDate(dateOfBirth)
                 : 'No Date of Birth Information'}
             </Typography>
           </Grid>
+          {editBirthday && <EditStudentBirthday setEditBirthday={setEditBirthday} />}
         </Grid>
       </CardContent>
       <CardActions>
-        <Button size='small'>Edit Name</Button>
-        <Button size='small'>Edit Address</Button>
-        <Button size='small'>Edit Birth Date</Button>
+        <Button size='small' onClick={handleEditNameClick}>Edit Name</Button>
+        <Button size='small' onClick={handleEditAddressClick}>Edit Address</Button>
+        <Button size='small' onClick={handleEditBirthdayClick}>Edit Birth Date</Button>
       </CardActions>
     </Card>
   )

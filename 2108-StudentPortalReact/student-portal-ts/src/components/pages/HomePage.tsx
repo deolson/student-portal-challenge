@@ -4,7 +4,6 @@ import PortalButtonContainer from '../PortalButtonContainer/PortalButtonContaine
 import HomeCarousel from '../HomeCarousel/HomeCarousel'
 
 function HomePage () {
-    
   return (
     <>
       <Grid container justifyContent='center'>

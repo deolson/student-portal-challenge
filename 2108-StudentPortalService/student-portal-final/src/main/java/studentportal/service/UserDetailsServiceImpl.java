@@ -40,6 +40,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     	return new org.springframework.security.core.userdetails.User(user.getCollegeEmail(), user.getPassword(), getAuthority(user));
     }
     
+    
+    /**
+     * Simple helper method to get the set of roles from the user and apply each role to an a string representation 
+     * of SimpleGrantedAuthority that Spring security will recognize  
+     * 
+     * @param user
+     * @return
+     */
     private Set<SimpleGrantedAuthority> getAuthority(User user) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
         user.getRoles().forEach(role -> {

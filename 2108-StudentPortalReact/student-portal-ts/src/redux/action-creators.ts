@@ -1,23 +1,24 @@
-import { IStudent } from '../state-structures'
+import { IUser, IJwtResponse } from '../state-structures'
 import { AuthActionTypes } from './action-types'
 
-export const studentLoginRequest = () => {
+export const loginRequest = () => {
   return {
     type: AuthActionTypes.LOGIN_REQUEST
   }
 }
 
-export const studentLoginSuccess = (student: IStudent) => {
+export const loginSuccess = (response: IJwtResponse) => {
   return {
-    type: AuthActionTypes.LOGIN_STUDENT_SUCCESS,
-    payload: student
+    type: AuthActionTypes.LOGIN_SUCCESS,
+    payload: response.user,
+    jwt: response.jwtToken
   }
 }
 
-export const updateStudent = (student: IStudent) => {
+export const updateUser = (user: IUser) => {
   return {
-    type: AuthActionTypes.STUDENT_UPDATE,
-    payload: student
+    type: AuthActionTypes.USER_UPDATE,
+    payload: user
   }
 }
 

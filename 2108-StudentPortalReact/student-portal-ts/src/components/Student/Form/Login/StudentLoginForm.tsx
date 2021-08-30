@@ -74,7 +74,7 @@ export default function StudentLoginForm (): ReactElement {
   }
 
   // dispatches the login thunk and sets that the user tried to login
-  const handleFormSubmit = (
+  const handleSubmit = (
     event: React.FormEvent<HTMLFormElement>
   ): void => {
     event.preventDefault()
@@ -100,7 +100,7 @@ export default function StudentLoginForm (): ReactElement {
           />
         </div>
       )}
-      <form onSubmit={handleFormSubmit}>
+      <form onSubmit={handleSubmit}>
         <Grid
           container
           justifyContent='space-evenly'
